@@ -20,8 +20,11 @@ const validateConfig = (config: Config) => {
   }
 };
 
-export const setUser = (config: Config) => {
+export const setUser = (username: string) => {
   const configPath = path.join(__dirname, '../.gatorconfig.json');
+  const configData = fs.existsSync(configPath) ? fs.readFileSync(configPath, 'utf-8') : '{}';
+  const config: Config = JSON.parse(configData);
+  config.currentUserName = username;
   validateConfig(config);
   fs.writeFileSync(configPath, JSON.stringify(config));
 };

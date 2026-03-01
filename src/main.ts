@@ -1,9 +1,12 @@
-import { setUser, readConfig } from './config';
+import { readConfig } from './config';
+import type { CommandsRegistry } from './types/command';
+
+const commandRegistry: CommandsRegistry = {
+};
 function main() {
-  setUser({ dbUrl: 'postgres://example',
-    currentUserName: 'gatoruser' });
   const config = readConfig();
   console.log('Current configuration:', config);
+
 }
 
 main();
