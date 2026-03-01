@@ -1,0 +1,26 @@
+{
+  "name": "blog-agg",
+  "version": "1.0.0",
+  "main": "main.ts",
+  "type": "module",
+  "scripts": {
+    "start": "tsx ./src/main.ts",
+    "test": "vitest test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Keanred/blog-agg.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Keanred/blog-agg/issues"
+  },
+  "homepage": "https://github.com/Keanred/blog-agg#readme",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^25.3.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
