@@ -25,6 +25,17 @@ export const setUser = (username: string) => {
   fs.writeFileSync(configPath, JSON.stringify(config));
 };
 
+export const getUser = (): string => {
+  const configPath = path.join(__dirname, '../.gatorconfig.json');
+  if (!fs.existsSync(configPath)) {
+    throw new Error('Config file not found');
+  }
+  const configData = fs.readFileSync(configPath, 'utf-8');
+  validateConfig(JSON.parse(configData));
+  const config: Config = JSON.parse(configData);
+  return config.currentUserName;
+}
+
 export const readConfig = (): Config => {
   const configPath = path.join(__dirname, '../.gatorconfig.json');
   if (!fs.existsSync(configPath)) {
