@@ -9,7 +9,7 @@ if (!fs.existsSync(configPath)) {
 const config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
 
 export default defineConfig({
-  schema: "src/schemas/users.ts",
+  schema: "src/lib/db/schema.ts",
   out: "src/lib/db",
   dialect: "postgresql",
   dbCredentials: {

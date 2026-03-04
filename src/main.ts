@@ -3,6 +3,7 @@ import { loginHandler } from './handlers/loginHandler';
 import { resetHandler } from './handlers/resetHandler';
 import { registerHandler } from './handlers/registerHandler';
 import { usersHandler } from './handlers/userHandler';
+import { aggHandler } from './handlers/aggHandler';
 import type { CommandsRegistry } from './types/command';
 import { argv } from 'process';
 
@@ -13,6 +14,7 @@ async function main() {
   registerCommand(commandRegistry, 'register', registerHandler);
   registerCommand(commandRegistry, 'reset', resetHandler);
   registerCommand(commandRegistry, 'users', usersHandler);
+  registerCommand(commandRegistry, 'agg', aggHandler);
 
   const [,, commandName, ...args] = argv;
   console.log(`Running command: ${commandName} with arguments: ${args.join(' ')}`);
