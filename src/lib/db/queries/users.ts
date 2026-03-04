@@ -12,3 +12,21 @@ export const getUserByName = async (name: string) => {
   const [result] = await db.select().from(users).where(eq(users.name, name));
   return result;
 }
+
+export const getUsers = async () => {
+  const result = await db.select().from(users);
+  const allUsers = result.map((row) => {
+    return {
+      id: row.id,
+      name: row.name,
+    }
+  });
+  return allUsers;
+}
+
+export const deleteUsers = async () => {
+  const [result] = await db.delete(users).returning();
+  console.log(`Deleted users`);
+  return result;
+}
+
