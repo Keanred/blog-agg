@@ -1,10 +1,16 @@
 import { registerCommand, runCommand } from "./command";
+import { UserCommandHandler } from "./types/middleware";
 import { loginHandler } from "./handlers/loginHandler";
 import { resetHandler } from "./handlers/resetHandler";
 import { registerHandler } from "./handlers/registerHandler";
 import { usersHandler } from "./handlers/userHandler";
 import { aggHandler } from "./handlers/aggHandler";
-import { addFeedHandler, readFeedsHandler } from "./handlers/feedsHandler";
+import {
+  addFeedHandler,
+  readFeedsHandler,
+  feedFollowHandler,
+  followedFeedsHandler,
+} from "./handlers/feedsHandler";
 import type { CommandsRegistry } from "./types/command";
 import { argv } from "process";
 
@@ -16,8 +22,22 @@ async function main() {
   registerCommand(commandRegistry, "reset", resetHandler);
   registerCommand(commandRegistry, "users", usersHandler);
   registerCommand(commandRegistry, "agg", aggHandler);
-  registerCommand(commandRegistry, "addfeed", addFeedHandler);
+  registerCommand(
+    commandRegistry,
+    "addfeed",
+    UserCommandHandler(addFeedHandler),
+  );
   registerCommand(commandRegistry, "feeds", readFeedsHandler);
+  registerCommand(
+    commandRegistry,
+    "follow",
+    UserCommandHandler(feedFollowHandler),
+  );
+  registerCommand(
+    commandRegistry,
+    "following",
+    UserCommandHandler(followedFeedsHandler),
+  );
 
   const [, , commandName, ...args] = argv;
 

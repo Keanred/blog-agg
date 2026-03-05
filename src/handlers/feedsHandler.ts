@@ -2,7 +2,12 @@ import { getFeeds } from "../lib/db/queries/feeds";
 import type { CommandHandler } from "../types/command";
 import { getUser } from "../config";
 import { getUserById, getUserByName } from "../lib/db/queries/users";
-import { createFeed } from "../lib/db/queries/feeds";
+import {
+  getFeedByUrl,
+  createFeed,
+  createFeedFollow,
+  getFeedFollowsForUser,
+} from "../lib/db/queries/feeds";
 import type { Feed, User } from "../lib/db/schema";
 
 const printFeed = (feed: Feed, user: User) => {
@@ -50,6 +55,12 @@ export const addFeedHandler: CommandHandler = async (cmdName, ...args) => {
     console.log("Failed to create feed");
     process.exit(1);
   }
+  const followed = await createFeedFollow(result.id, user.id);
+  if (!followed) {
+    console.log("Failed to follow feed");
+    process.exit(1);
+  }
+  printFeed(result, user);
 };
 
 export const readFeedsHandler: CommandHandler = async (cmdName, ...args) => {
@@ -63,4 +74,59 @@ export const readFeedsHandler: CommandHandler = async (cmdName, ...args) => {
     process.exit(1);
   }
   await printFeeds(feeds);
+};
+
+export const feedFollowHandler: CommandHandler = async (cmdName, ...args) => {
+  if (args.length !== 1) {
+    console.log("Usage: follow url");
+    process.exit(1);
+  }
+  const [url] = args;
+  if (!url) {
+    console.log("Usage: follow url");
+    process.exit(1);
+  }
+  const loggedInUser = getUser();
+  const user = await getUserByName(loggedInUser);
+  if (!user) {
+    console.log("User not found");
+    process.exit(1);
+  }
+  const feed = await getFeedByUrl(url);
+  if (!feed) {
+    console.log("Feed not found");
+    process.exit(1);
+  }
+  const follow = await createFeedFollow(feed.id, user.id);
+  if (!follow) {
+    console.log("Failed to create feed follow");
+    process.exit(1);
+  }
+  console.log(
+    `User ${follow.userName} is now following feed ${follow.feedName}`,
+  );
+};
+
+export const followedFeedsHandler: CommandHandler = async (
+  cmdName,
+  ...args
+) => {
+  if (args.length !== 0) {
+    console.log("Usage: followed");
+    process.exit(1);
+  }
+  const loggedInUser = getUser();
+  const user = await getUserByName(loggedInUser);
+  if (!user) {
+    console.log("User not found");
+    process.exit(1);
+  }
+  const feedFollows = await getFeedFollowsForUser(user.id);
+  if (!feedFollows) {
+    console.log("No followed feeds found");
+    process.exit(1);
+  }
+  for (const follow of feedFollows) {
+    console.log(`* ${follow.feedName}`);
+  }
 };
