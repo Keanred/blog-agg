@@ -1,12 +1,6 @@
 import { getFeeds } from "../lib/db/queries/feeds";
-<<<<<<< HEAD
-import type { CommandHandler } from "../types/command";
-import { getUser } from "../config";
-import { getUserById, getUserByName } from "../lib/db/queries/users";
-=======
 import type { CommandHandler, UserCommandHandler } from "../types/commands";
 import { getUserById } from "../lib/db/queries/users";
->>>>>>> 3014526 (add middleware)
 import {
   getFeedByUrl,
   createFeed,
@@ -57,24 +51,10 @@ export const addFeedHandler: UserCommandHandler = async (
   const [name, url] = args;
   if (!name || !url) exitWithError("Usage: addfeed name url");
   const result = await createFeed(name, url, user.id);
-<<<<<<< HEAD
-  if (result != undefined) {
-    printFeed(result, user);
-  } else {
-    console.log("Failed to create feed");
-    process.exit(1);
-  }
-  const followed = await createFeedFollow(result.id, user.id);
-  if (!followed) {
-    console.log("Failed to follow feed");
-    process.exit(1);
-  }
-=======
   if (!result) exitWithError("Failed to create feed");
   printFeed(result, user);
   const followed = await createFeedFollow(result.id, user.id);
   if (!followed) exitWithError("Failed to follow feed");
->>>>>>> 3014526 (add middleware)
   printFeed(result, user);
 };
 
@@ -85,34 +65,6 @@ export const readFeedsHandler: CommandHandler = async (cmdName, ...args) => {
   await printFeeds(feeds);
 };
 
-<<<<<<< HEAD
-export const feedFollowHandler: CommandHandler = async (cmdName, ...args) => {
-  if (args.length !== 1) {
-    console.log("Usage: follow url");
-    process.exit(1);
-  }
-  const [url] = args;
-  if (!url) {
-    console.log("Usage: follow url");
-    process.exit(1);
-  }
-  const loggedInUser = getUser();
-  const user = await getUserByName(loggedInUser);
-  if (!user) {
-    console.log("User not found");
-    process.exit(1);
-  }
-  const feed = await getFeedByUrl(url);
-  if (!feed) {
-    console.log("Feed not found");
-    process.exit(1);
-  }
-  const follow = await createFeedFollow(feed.id, user.id);
-  if (!follow) {
-    console.log("Failed to create feed follow");
-    process.exit(1);
-  }
-=======
 export const feedFollowHandler: UserCommandHandler = async (
   cmdName,
   user,
@@ -125,33 +77,11 @@ export const feedFollowHandler: UserCommandHandler = async (
   if (!feed) exitWithError("Feed not found");
   const follow = await createFeedFollow(feed.id, user.id);
   if (!follow) exitWithError("Failed to create feed follow");
->>>>>>> 3014526 (add middleware)
   console.log(
     `User ${follow.userName} is now following feed ${follow.feedName}`,
   );
 };
 
-<<<<<<< HEAD
-export const followedFeedsHandler: CommandHandler = async (
-  cmdName,
-  ...args
-) => {
-  if (args.length !== 0) {
-    console.log("Usage: followed");
-    process.exit(1);
-  }
-  const loggedInUser = getUser();
-  const user = await getUserByName(loggedInUser);
-  if (!user) {
-    console.log("User not found");
-    process.exit(1);
-  }
-  const feedFollows = await getFeedFollowsForUser(user.id);
-  if (!feedFollows) {
-    console.log("No followed feeds found");
-    process.exit(1);
-  }
-=======
 export const followedFeedsHandler: UserCommandHandler = async (
   cmdName,
   user,
@@ -160,7 +90,6 @@ export const followedFeedsHandler: UserCommandHandler = async (
   validateArgs(args, 0, "followed");
   const feedFollows = await getFeedFollowsForUser(user.id);
   if (!feedFollows) exitWithError("No followed feeds found");
->>>>>>> 3014526 (add middleware)
   for (const follow of feedFollows) {
     console.log(`* ${follow.feedName}`);
   }
