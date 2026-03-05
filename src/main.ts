@@ -1,5 +1,4 @@
-import { registerCommand, runCommand } from "./command";
-import { UserCommandHandler } from "./types/middleware";
+import { registerCommand, runCommand } from "./commands";
 import { loginHandler } from "./handlers/loginHandler";
 import { resetHandler } from "./handlers/resetHandler";
 import { registerHandler } from "./handlers/registerHandler";
@@ -11,8 +10,9 @@ import {
   feedFollowHandler,
   followedFeedsHandler,
 } from "./handlers/feedsHandler";
-import type { CommandsRegistry } from "./types/command";
+import type { CommandsRegistry } from "./types/commands";
 import { argv } from "process";
+import { loggedInMiddleware } from "./middleware";
 
 const commandRegistry: CommandsRegistry = {};
 
@@ -25,18 +25,18 @@ async function main() {
   registerCommand(
     commandRegistry,
     "addfeed",
-    UserCommandHandler(addFeedHandler),
+    loggedInMiddleware(addFeedHandler),
   );
   registerCommand(commandRegistry, "feeds", readFeedsHandler);
   registerCommand(
     commandRegistry,
     "follow",
-    UserCommandHandler(feedFollowHandler),
+    loggedInMiddleware(feedFollowHandler),
   );
   registerCommand(
     commandRegistry,
     "following",
-    UserCommandHandler(followedFeedsHandler),
+    loggedInMiddleware(followedFeedsHandler),
   );
 
   const [, , commandName, ...args] = argv;

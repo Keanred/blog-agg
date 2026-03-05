@@ -5,6 +5,7 @@ export type CommandHandler = (
 ) => Promise<void>;
 
 export type CommandsRegistry = Record<string, CommandHandler>;
+
 export type UserCommandHandler = (
   cmdName: string,
   user: User,

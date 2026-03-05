@@ -1,5 +1,5 @@
 import { getUsers } from "../lib/db/queries/users";
-import type { CommandHandler } from "../types/command";
+import type { CommandHandler } from "../types/commands";
 import { readConfig } from "../config";
 
 export const usersHandler: CommandHandler = async (cmdName, ...args) => {

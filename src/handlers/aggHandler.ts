@@ -1,4 +1,4 @@
-import type { CommandHandler } from "../types/command";
+import type { CommandHandler } from "../types/commands";
 import { fetchRssFeed } from "../feedFetcher";
 
 export const aggHandler: CommandHandler = async (cmdName, ...args) => {

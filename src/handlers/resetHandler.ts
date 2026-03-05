@@ -1,4 +1,4 @@
-import type { CommandHandler } from "../types/command";
+import type { CommandHandler } from "../types/commands";
 import { deleteUsers } from "../lib/db/queries/users";
 
 export const resetHandler: CommandHandler = async (cmdName, ...args) => {

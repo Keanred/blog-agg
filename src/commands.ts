@@ -1,4 +1,4 @@
-import type { CommandsRegistry, CommandHandler } from "./types/command";
+import type { CommandsRegistry, CommandHandler } from "./types/commands";
 
 export const registerCommand = (registry: CommandsRegistry, cmdName: string, handler: CommandHandler) => {
   if (registry === undefined) {
