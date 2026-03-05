@@ -1,6 +1,8 @@
 import { db } from "..";
 import { feeds, feedFollows, users } from "../schema";
 import { eq } from "drizzle-orm";
+import { sql } from "drizzle-orm";
+import type { Feed } from "../schema";
 
 export const getFeeds = async () => {
   const result = await db.select().from(feeds);
@@ -56,6 +58,14 @@ export const createFeedFollow = async (feedId: string, userId: string) => {
   return result;
 };
 
+export const deleteFeedFollow = async (feedId: string, userId: string) => {
+  const [result] = await db
+    .delete(feedFollows)
+    .where((eq(feedFollows.feedId, feedId), eq(feedFollows.userId, userId)))
+    .returning();
+  return result;
+};
+
 export const getFeedFollowsForUser = async (userId: string) => {
   const result = await db
     .select({
@@ -67,5 +77,23 @@ export const getFeedFollowsForUser = async (userId: string) => {
     .innerJoin(users, eq(feedFollows.userId, users.id))
     .innerJoin(feeds, eq(feedFollows.feedId, feeds.id))
     .where(eq(feedFollows.userId, userId));
+  return result;
+};
+
+export const markFeedFetched = async (feedId: string) => {
+  const [result] = await db
+    .update(feeds)
+    .set({ last_fetched_at: new Date(), updatedAt: new Date() })
+    .where(eq(feeds.id, feedId))
+    .returning();
+  return result;
+};
+
+export const getNextFeedToFetch = async (): Promise<Feed | undefined> => {
+  const [result] = await db
+    .select()
+    .from(feeds)
+    .orderBy(sql`${feeds.last_fetched_at} ASC NULLS FIRST`)
+    .limit(1);
   return result;
 };

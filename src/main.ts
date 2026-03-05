@@ -9,6 +9,7 @@ import {
   readFeedsHandler,
   feedFollowHandler,
   followedFeedsHandler,
+  unfollowFeedHandler,
 } from "./handlers/feedsHandler";
 import type { CommandsRegistry } from "./types/commands";
 import { argv } from "process";
@@ -37,6 +38,11 @@ async function main() {
     commandRegistry,
     "following",
     loggedInMiddleware(followedFeedsHandler),
+  );
+  registerCommand(
+    commandRegistry,
+    "unfollow",
+    loggedInMiddleware(unfollowFeedHandler),
   );
 
   const [, , commandName, ...args] = argv;
