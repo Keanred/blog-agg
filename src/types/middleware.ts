@@ -1,4 +1,4 @@
-import type { CommandHandler, UserCommandHandler } from "./commands";
+import type { CommandHandler, UserCommandHandler } from "./commandTypes";
 
 export type middlewareLoggedIn = (
   handler: UserCommandHandler,

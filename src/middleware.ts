@@ -1,6 +1,6 @@
 import { readConfig } from "./config";
 import { getUserByName } from "./lib/db/queries/users";
-import type { CommandHandler, UserCommandHandler } from "./types/commands";
+import type { CommandHandler, UserCommandHandler } from "./types/commandTypes";
 import type { middlewareLoggedIn } from "./types/middleware";
 
 export const loggedInMiddleware: middlewareLoggedIn = (

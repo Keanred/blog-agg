@@ -11,12 +11,12 @@ export const createUser = async (name: string) => {
 export const getUserByName = async (name: string) => {
   const [result] = await db.select().from(users).where(eq(users.name, name));
   return result;
-}
+};
 
 export const getUserById = async (id: string) => {
   const [result] = await db.select().from(users).where(eq(users.id, id));
   return result;
-}
+};
 
 export const getUsers = async () => {
   const result = await db.select().from(users);
@@ -24,14 +24,14 @@ export const getUsers = async () => {
     return {
       id: row.id,
       name: row.name,
-    }
+    };
   });
   return allUsers;
-}
+};
 
 export const deleteUsers = async () => {
   const [result] = await db.delete(users).returning();
   console.log(`Deleted users`);
   return result;
-}
+};
 

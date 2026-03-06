@@ -1,6 +1,10 @@
-import type { CommandsRegistry, CommandHandler } from "./types/commands";
+import type { CommandsRegistry, CommandHandler } from "./types/commandTypes";
 
-export const registerCommand = (registry: CommandsRegistry, cmdName: string, handler: CommandHandler) => {
+export const registerCommand = (
+  registry: CommandsRegistry,
+  cmdName: string,
+  handler: CommandHandler,
+) => {
   if (registry === undefined) {
     throw new Error("No registry");
   }
@@ -10,7 +14,11 @@ export const registerCommand = (registry: CommandsRegistry, cmdName: string, han
   registry[cmdName] = handler;
 };
 
-export const runCommand = async (registry: CommandsRegistry, cmdName: string, ...args: string[]) => {
+export const runCommand = async (
+  registry: CommandsRegistry,
+  cmdName: string,
+  ...args: string[]
+) => {
   const handler = registry[cmdName];
   if (!handler) {
     throw new Error(`Command "${cmdName}" not found.`);

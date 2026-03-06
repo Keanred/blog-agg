@@ -19,11 +19,11 @@ export const getFeedByUrl = async (url: string) => {
   return result;
 };
 
-export const createFeed = async (name: string, url: string, id: string) => {
+export const createFeed = async (name: string, url: string, userId: string) => {
   const [result] = await db
     .insert(feeds)
     .values({
-      userId: id,
+      userId,
       name: name,
       url: url,
     })

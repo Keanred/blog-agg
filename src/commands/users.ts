@@ -1,8 +1,8 @@
 import { getUsers } from "../lib/db/queries/users";
-import type { CommandHandler } from "../types/commands";
+import type { CommandHandler } from "../types/commandTypes";
 import { readConfig } from "../config";
 
-export const usersHandler: CommandHandler = async (cmdName, ...args) => {
+export const usersCommand: CommandHandler = async (cmdName, ...args) => {
   const { currentUserName } = readConfig();
   if (args.length > 0) {
     throw new Error("The 'users' command does not take any arguments.");

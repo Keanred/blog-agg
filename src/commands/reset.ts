@@ -1,7 +1,7 @@
-import type { CommandHandler } from "../types/commands";
+import type { CommandHandler } from "../types/commandTypes";
 import { deleteUsers } from "../lib/db/queries/users";
 
-export const resetHandler: CommandHandler = async (cmdName, ...args) => {
+export const resetCommand: CommandHandler = async (cmdName, ...args) => {
   console.log(`Handling command: ${cmdName} with args: ${args.join(", ")}`);
 
   const result = await deleteUsers();

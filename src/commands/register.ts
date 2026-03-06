@@ -1,8 +1,8 @@
-import type { CommandHandler } from "../types/commands";
+import type { CommandHandler } from "../types/commandTypes";
 import { createUser, getUserByName } from "../lib/db/queries/users";
 import { setUser } from "../config";
 
-export const registerHandler: CommandHandler = async (cmdName, ...args) => {
+export const registerUserCommand: CommandHandler = async (cmdName, ...args) => {
   console.log(`Handling command: ${cmdName} with args: ${args.join(", ")}`);
   if (args.length === 0) {
     throw new Error("Username is required for registration.");
@@ -10,10 +10,11 @@ export const registerHandler: CommandHandler = async (cmdName, ...args) => {
   if (args.length > 1) {
     throw new Error("Too many arguments for registration. Only username is required.");
   }
-  if (typeof args[0] !== "string") {
-    throw new Error("Username must be a string.");
+  const [rawUsername] = args;
+  if (!rawUsername) {
+    throw new Error("Username is required for registration.");
   }
-  const username = args[0].trim();
+  const username = rawUsername.trim();
   if (username.length === 0) {
     throw new Error("Username cannot be empty.");
   }
@@ -21,7 +22,7 @@ export const registerHandler: CommandHandler = async (cmdName, ...args) => {
   if (verifyUnique) {
     throw new Error(`Username "${username}" is already taken.`);
   }
-  const result = await createUser(args[0]);
+  const result = await createUser(username);
   console.log(`Result from createUser: ${JSON.stringify(result)}`);
   if (!result) {
     throw new Error("Failed to create user.");

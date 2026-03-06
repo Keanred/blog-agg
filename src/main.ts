@@ -1,48 +1,52 @@
-import { registerCommand, runCommand } from "./commands";
-import { loginHandler } from "./handlers/loginHandler";
-import { resetHandler } from "./handlers/resetHandler";
-import { registerHandler } from "./handlers/registerHandler";
-import { usersHandler } from "./handlers/userHandler";
-import { aggHandler } from "./handlers/aggHandler";
-import {
-  addFeedHandler,
-  readFeedsHandler,
-  feedFollowHandler,
-  followedFeedsHandler,
-  unfollowFeedHandler,
-} from "./handlers/feedsHandler";
-import type { CommandsRegistry } from "./types/commands";
+import { registerCommand, runCommand } from "./commandRegistry";
+import { loginCommand } from "./commands/login";
+import { resetCommand } from "./commands/reset";
+import { registerUserCommand } from "./commands/register";
+import { usersCommand } from "./commands/users";
+import { aggregateCommand } from "./commands/aggregate";
+import { addFeedCommand } from "./commands/addFeed";
+import { feedsCommand } from "./commands/feeds";
+import { followCommand } from "./commands/follow";
+import { followingCommand } from "./commands/following";
+import { unfollowCommand } from "./commands/unfollow";
+import { browseCommand } from "./commands/browse";
+import type { CommandsRegistry } from "./types/commandTypes";
 import { argv } from "process";
 import { loggedInMiddleware } from "./middleware";
 
 const commandRegistry: CommandsRegistry = {};
 
 async function main() {
-  registerCommand(commandRegistry, "login", loginHandler);
-  registerCommand(commandRegistry, "register", registerHandler);
-  registerCommand(commandRegistry, "reset", resetHandler);
-  registerCommand(commandRegistry, "users", usersHandler);
-  registerCommand(commandRegistry, "agg", aggHandler);
+  registerCommand(commandRegistry, "login", loginCommand);
+  registerCommand(commandRegistry, "register", registerUserCommand);
+  registerCommand(commandRegistry, "reset", resetCommand);
+  registerCommand(commandRegistry, "users", usersCommand);
+  registerCommand(commandRegistry, "agg", aggregateCommand);
   registerCommand(
     commandRegistry,
     "addfeed",
-    loggedInMiddleware(addFeedHandler),
+    loggedInMiddleware(addFeedCommand),
   );
-  registerCommand(commandRegistry, "feeds", readFeedsHandler);
+  registerCommand(commandRegistry, "feeds", feedsCommand);
   registerCommand(
     commandRegistry,
     "follow",
-    loggedInMiddleware(feedFollowHandler),
+    loggedInMiddleware(followCommand),
   );
   registerCommand(
     commandRegistry,
     "following",
-    loggedInMiddleware(followedFeedsHandler),
+    loggedInMiddleware(followingCommand),
   );
   registerCommand(
     commandRegistry,
     "unfollow",
-    loggedInMiddleware(unfollowFeedHandler),
+    loggedInMiddleware(unfollowCommand),
+  );
+  registerCommand(
+    commandRegistry,
+    "browse",
+    loggedInMiddleware(browseCommand),
   );
 
   const [, , commandName, ...args] = argv;

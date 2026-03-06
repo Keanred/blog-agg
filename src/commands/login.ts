@@ -1,8 +1,8 @@
-import type { CommandHandler } from "../types/commands";
-import { setUser } from "../config"
+import type { CommandHandler } from "../types/commandTypes";
+import { setUser } from "../config";
 import { getUserByName } from "../lib/db/queries/users";
 
-export const loginHandler: CommandHandler = async (cmdName, ...args) => {
+export const loginCommand: CommandHandler = async (cmdName, ...args) => {
   if (args.length === 0) {
     throw new Error("Username is required for login.");
   }
@@ -18,4 +18,4 @@ export const loginHandler: CommandHandler = async (cmdName, ...args) => {
   }
   setUser(args[0]);
   console.log(`Logged in as ${args[0]}`);
-  };
+};

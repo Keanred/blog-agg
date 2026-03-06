@@ -1,7 +1,25 @@
-import type { CommandHandler } from "../types/commands";
+import type { CommandHandler } from "../types/commandTypes";
 import { fetchRssFeed } from "../feedFetcher";
 import { markFeedFetched, getNextFeedToFetch } from "../lib/db/queries/feeds";
+import { createPost } from "../lib/db/queries/posts";
 import type { RSSFeed } from "../types/rss";
+
+export const formatDateIntl = (dateStr: string): string => {
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) throw new Error(`Invalid date: ${dateStr}`);
+  const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  const timeFormatter = new Intl.DateTimeFormat("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+  return `${dateFormatter.format(date)} ${timeFormatter.format(date)}`;
+};
 
 export const scrapeFeeds = async () => {
   const feed = await getNextFeedToFetch();
@@ -11,8 +29,16 @@ export const scrapeFeeds = async () => {
   }
   await markFeedFetched(feed.id);
   const result: RSSFeed = await fetchRssFeed(feed.url);
+
   for (const item of result.channel.item) {
-    console.log(`Title: ${item.title}`);
+    const formattedDate = formatDateIntl(item.pubDate) ?? new Date();
+    await createPost(
+      feed.id,
+      item.title,
+      item.link,
+      item.description,
+      new Date(formattedDate),
+    );
   }
 };
 
@@ -40,7 +66,7 @@ const parseDuration = (durationStr: string): number => {
   }
 };
 
-export const aggHandler: CommandHandler = async (cmdName, ...args) => {
+export const aggregateCommand: CommandHandler = async (cmdName, ...args) => {
   const [timeBetweenReqs] = args;
   if (!timeBetweenReqs || typeof timeBetweenReqs !== "string") {
     console.error("Usage: agg time_between_reqs");
